@@ -1,16 +1,20 @@
 <template>
-  <div id="app">
-    <form-capture-customer-data/>
+  <div id="app" class="hero is-fullheight has-background-grey-lighter">
+    <div class="hero-body">
+      <div class="container">
+        <form-capture-customer-data-steps/>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import FormCaptureCustomerData from './components/FormCaptureCustomerData.vue'
+import FormCaptureCustomerDataSteps from '@/components/CaptureCustomerData/Steps.vue'
 
 export default {
   name: 'App',
   components: {
-    FormCaptureCustomerData
+    FormCaptureCustomerDataSteps
   }
 }
 </script>
