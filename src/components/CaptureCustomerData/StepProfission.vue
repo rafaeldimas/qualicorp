@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-step-item label="Profissão" icon="briefcase"></b-step-item>
+    <b-step-item label="Profissão" icon="briefcase" value="profission"></b-step-item>
   </div>
 </template>
 

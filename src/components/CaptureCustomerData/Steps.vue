@@ -1,25 +1,23 @@
 <template>
   <div class="box pt-6">
-    <b-steps>
-      <step-location />
+    <b-steps v-model="step">
+      <step-location @selectedState="selectedState" @selectedCity="selectedCity" />
       <step-profission />
       <step-entity />
 
       <template #navigation="{ previous, next }">
         <b-field grouped position="is-centered">
           <b-button
-            tag="a"
             class="pagination-previous"
             icon-left="chevron-left"
             :disabled="previous.disabled"
-            @click.prevent="previous.action"
+            @click.prevent="canChangeStep(previous.action)"
           />
           <b-button
-            tag="a"
             class="pagination-next"
             icon-left="chevron-right"
             :disabled="next.disabled"
-            @click.prevent="next.action"
+            @click.prevent="canChangeStep(next.action)"
           />
         </b-field>
       </template>
@@ -34,6 +32,47 @@ import StepProfission from "@/components/CaptureCustomerData/StepProfission.vue"
 
 export default {
   components: { StepLocation, StepProfission, StepEntity },
-  name: "Steps"
+  name: "Steps",
+  data() {
+    return {
+      step: 'location',
+      state: null,
+      city: null,
+    };
+  },
+  computed: {
+    hasLocation() {
+      return !!this.state && !!this.city;
+    },
+  },
+  methods: {
+    canChangeStep(stepAction) {
+      const verifyCanStep = {
+        'location': () => this.hasLocation,
+        'profission': () => true,
+        'entity': () => true,
+      };
+
+      const stepErrorMessage = {
+        'location': 'É preciso preencher os dados de localização antes de passar para a próxima etapa.',
+        'profission': '',
+        'entity': '',
+      };
+
+      verifyCanStep[this.step]()
+        ? stepAction()
+        : this.$buefy.toast.open({
+          duration: 5000,
+          message: stepErrorMessage[this.step],
+          type: 'is-warning',
+        });
+    },
+    selectedState(state) {
+      this.state = state;
+    },
+    selectedCity(city) {
+      this.city = city;
+    },
+  },
 };
 </script>

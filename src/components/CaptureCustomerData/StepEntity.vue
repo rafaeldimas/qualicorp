@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-step-item label="Entidade" icon="domain"></b-step-item>
+    <b-step-item label="Entidade" icon="domain" value="entity"></b-step-item>
   </div>
 </template>
 

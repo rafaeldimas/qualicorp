@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-step-item label="Localização" icon="map-marker">
+    <b-step-item label="Localização" icon="map-marker" value="location">
       <b-field label="Estado">
         <b-select
           placeholder="Selecione o Estado"
@@ -10,7 +10,7 @@
           :disabled="loadingStates"
           @input="getCities"
         >
-          <option v-for="state of states" :key="state.id" :value="state.id">
+          <option v-for="state of states" :key="state.id" :value="state">
             {{ state.nome }}
           </option>
         </b-select>
@@ -22,9 +22,9 @@
           v-model="selectedCity"
           expanded
           :loading="loadingCities"
-          :disabled="!cities.lenght || loadingCities"
+          :disabled="isDisabledCities"
         >
-          <option v-for="city of cities" :key="city.id" :value="city.id">
+          <option v-for="city of cities" :key="city.id" :value="city">
             {{ city.nome }}
           </option>
         </b-select>
@@ -48,6 +48,19 @@ export default {
       selectedCity: null
     };
   },
+  computed: {
+    isDisabledCities() {
+      return !this.cities.length || this.loadingCities;
+    }
+  },
+  watch: {
+    selectedState(newState) {
+      this.$emit('selectedState', newState?.sigla);
+    },
+    selectedCity(newCity) {
+      this.$emit('selectedCity', newCity?.nome);
+    },
+  },
   mounted() {
     this.getStates();
   },
@@ -69,9 +82,11 @@ export default {
 
     async getCities() {
       this.loadingCities = true;
+      this.cities = [];
+      this.selectedCity = null;
 
       try {
-        const response = await locale.cities(this.selectedState, {
+        const response = await locale.cities(this.selectedState.id, {
           orderBy: "nome"
         });
         this.cities = response.data;
@@ -83,7 +98,7 @@ export default {
         });
       }
       this.loadingCities = false;
-    }
+    },
   }
 };
 </script>
