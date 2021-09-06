@@ -2,7 +2,7 @@
   <div class="box pt-6">
     <b-steps v-model="step">
       <step-location @selectedState="selectedState" @selectedCity="selectedCity" />
-      <step-profission />
+      <step-profission :location="{state, city}" @selectedProfission="selectedProfission" />
       <step-entity />
 
       <template #navigation="{ previous, next }">
@@ -38,24 +38,28 @@ export default {
       step: 'location',
       state: null,
       city: null,
+      profission: null,
     };
   },
   computed: {
     hasLocation() {
       return !!this.state && !!this.city;
     },
+    hasProfission() {
+      return !!this.profission;
+    },
   },
   methods: {
     canChangeStep(stepAction) {
       const verifyCanStep = {
         'location': () => this.hasLocation,
-        'profission': () => true,
+        'profission': () => this.hasProfission,
         'entity': () => true,
       };
 
       const stepErrorMessage = {
         'location': 'É preciso preencher os dados de localização antes de passar para a próxima etapa.',
-        'profission': '',
+        'profission': 'É preciso informar a profissão antes de passar para a próxima etapa.',
         'entity': '',
       };
 
@@ -73,6 +77,9 @@ export default {
     selectedCity(city) {
       this.city = city;
     },
+    selectedProfission(profission) {
+      this.profission = profission;
+    }
   },
 };
 </script>
