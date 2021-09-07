@@ -34,10 +34,6 @@ export default {
         profissions: [],
         loadingProfission: false,
         selectedProfission: null,
-        "entidade": "CAASP",
-        "uf": "SP",
-        "cidade": "São Paulo",
-        "datanascimento": ["1987-09-16"]
       };
     },
     watch: {

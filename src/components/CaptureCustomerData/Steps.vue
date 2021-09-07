@@ -1,9 +1,22 @@
 <template>
   <div class="box pt-6">
     <b-steps v-model="step">
-      <step-location @selectedState="selectedState" @selectedCity="selectedCity" />
-      <step-profission :location="{state, city}" @selectedProfission="selectedProfission" />
-      <step-entity />
+      <step-location
+        @selectedState="selectedState"
+        @selectedCity="selectedCity"
+      />
+
+      <step-profission
+        :location="{state, city}"
+        @selectedProfission="selectedProfission"
+      />
+
+      <step-entity
+        :state="state"
+        :city="city"
+        :profission="profission"
+        @selectedEntity="selectedEntity"
+      />
 
       <template #navigation="{ previous, next }">
         <b-field grouped position="is-centered">
@@ -39,6 +52,11 @@ export default {
       state: null,
       city: null,
       profission: null,
+      entity: null,
+      "entidade": "CAASP",
+      "uf": "SP",
+      "cidade": "São Paulo",
+      "datanascimento": ["1987-09-16"]
     };
   },
   computed: {
@@ -48,19 +66,22 @@ export default {
     hasProfission() {
       return !!this.profission;
     },
+    hasEntity() {
+      return !!this.entity;
+    },
   },
   methods: {
     canChangeStep(stepAction) {
       const verifyCanStep = {
         'location': () => this.hasLocation,
         'profission': () => this.hasProfission,
-        'entity': () => true,
+        'entity': () => this.hasEntity,
       };
 
       const stepErrorMessage = {
         'location': 'É preciso preencher os dados de localização antes de passar para a próxima etapa.',
         'profission': 'É preciso informar a profissão antes de passar para a próxima etapa.',
-        'entity': '',
+        'entity': 'É preciso informar a entidade antes de passar para a próxima etapa.',
       };
 
       verifyCanStep[this.step]()
@@ -79,7 +100,10 @@ export default {
     },
     selectedProfission(profission) {
       this.profission = profission;
-    }
+    },
+    selectedEntity(entity) {
+      this.entity = entity;
+    },
   },
 };
 </script>
