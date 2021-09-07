@@ -9,6 +9,7 @@
       <step-profission
         :location="{state, city}"
         @selectedProfission="selectedProfission"
+        @selectedBirthdate="selectedBirthdate"
       />
 
       <step-entity
@@ -16,6 +17,10 @@
         :city="city"
         :profission="profission"
         @selectedEntity="selectedEntity"
+      />
+
+      <step-plans
+        :paramsStepPlans="paramsStepPlans"
       />
 
       <template #navigation="{ previous, next }">
@@ -39,12 +44,14 @@
 </template>
 
 <script>
+import format from 'date-fns/format';
 import StepEntity from "@/components/CaptureCustomerData/StepEntity.vue";
 import StepLocation from "@/components/CaptureCustomerData/StepLocation.vue";
 import StepProfission from "@/components/CaptureCustomerData/StepProfission.vue";
+import StepPlans from '@/components/CaptureCustomerData/StepPlans.vue';
 
 export default {
-  components: { StepLocation, StepProfission, StepEntity },
+  components: { StepLocation, StepProfission, StepEntity, StepPlans },
   name: "Steps",
   data() {
     return {
@@ -52,11 +59,8 @@ export default {
       state: null,
       city: null,
       profission: null,
+      birthdate: null,
       entity: null,
-      "entidade": "CAASP",
-      "uf": "SP",
-      "cidade": "São Paulo",
-      "datanascimento": ["1987-09-16"]
     };
   },
   computed: {
@@ -66,21 +70,33 @@ export default {
     hasProfission() {
       return !!this.profission;
     },
+    hasBirthdate() {
+      return !!this.birthdate;
+    },
     hasEntity() {
       return !!this.entity;
+    },
+    paramsStepPlans() {
+      return {
+        entidade: this.entity,
+        uf: this.state,
+        cidade: this.city,
+        datanascimento: this.birthdate ? [format(this.birthdate, 'yyyy-MM-dd')] : null
+      };
     },
   },
   methods: {
     canChangeStep(stepAction) {
       const verifyCanStep = {
         'location': () => this.hasLocation,
-        'profission': () => this.hasProfission,
+        'profission': () => this.hasProfission && this.hasBirthdate,
         'entity': () => this.hasEntity,
+        'plans': () => true,
       };
 
       const stepErrorMessage = {
         'location': 'É preciso preencher os dados de localização antes de passar para a próxima etapa.',
-        'profission': 'É preciso informar a profissão antes de passar para a próxima etapa.',
+        'profission': 'É preciso informar a profissão e a data de nascimento antes de passar para a próxima etapa.',
         'entity': 'É preciso informar a entidade antes de passar para a próxima etapa.',
       };
 
@@ -100,6 +116,9 @@ export default {
     },
     selectedProfission(profission) {
       this.profission = profission;
+    },
+    selectedBirthdate(birthdate) {
+      this.birthdate = birthdate;
     },
     selectedEntity(entity) {
       this.entity = entity;

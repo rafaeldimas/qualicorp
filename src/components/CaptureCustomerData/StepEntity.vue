@@ -52,7 +52,6 @@ export default {
           const response = await entities(this.profission, this.state, this.city);
           this.entities = response.data;
         } catch (e) {
-          console.error(e);
           this.$buefy.toast.open({
             message: "Não foi possivel listar as entidades, tente novamente mais tarde!",
             type: "is-error"

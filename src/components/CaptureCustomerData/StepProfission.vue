@@ -1,6 +1,19 @@
 <template>
   <div>
     <b-step-item label="Profissão" icon="briefcase" value="profission">
+      <b-field label="Data de Nascimento">
+        <b-datepicker
+          v-model="selectedBirthdate"
+          placeholder="Clique para selecionar..."
+          icon="calendar-today"
+          :icon-right="selectedBirthdate ? 'close-circle' : ''"
+          icon-right-clickable
+          @icon-right-click="clearDate"
+          trap-focus
+          :max-date="new Date()">
+        </b-datepicker>
+      </b-field>
+
       <b-field label="Profissão">
         <b-select
           placeholder="Selecione a Profissão"
@@ -34,6 +47,7 @@ export default {
         profissions: [],
         loadingProfission: false,
         selectedProfission: null,
+        selectedBirthdate: null,
       };
     },
     watch: {
@@ -49,6 +63,9 @@ export default {
       selectedProfission(newProfission) {
         this.$emit('selectedProfission', newProfission);
       },
+      selectedBirthdate(newBirthdate) {
+        this.$emit('selectedBirthdate', newBirthdate);
+      },
     },
     methods: {
       async getProfissions() {
@@ -63,6 +80,9 @@ export default {
           });
         }
         this.loadingProfission = false;
+      },
+      clearDate () {
+        this.selectedBirthdate = null
       },
     },
 }
